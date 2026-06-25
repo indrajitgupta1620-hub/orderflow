@@ -45,16 +45,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        
-        User.Role role = User.Role.CUSTOMER;
-        if (request.getRole() != null) {
-            try {
-                role = User.Role.valueOf(request.getRole().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                // Keep default CUSTOMER
-            }
-        }
-        user.setRole(role);
+        user.setRole(User.Role.CUSTOMER);
         user.setPhone(request.getPhone());
         userRepository.save(user);
 

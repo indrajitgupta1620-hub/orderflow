@@ -194,11 +194,11 @@ async function handleLogin(email, password) {
     }
 }
 
-async function handleRegister(username, email, password, phone, role) {
+async function handleRegister(username, email, password, phone) {
     try {
         await apiFetch('/auth/register', {
             method: 'POST',
-            body: JSON.stringify({ username, email, password, phone, role })
+            body: JSON.stringify({ username, email, password, phone })
         });
         
         showToast('Account created successfully! Logging you in...', 'success');
@@ -987,21 +987,7 @@ function setupEventListeners() {
         const email = document.getElementById('register-email').value;
         const password = document.getElementById('register-password').value;
         const phone = document.getElementById('register-phone').value;
-        const role = document.getElementById('register-role').value;
-        handleRegister(username, email, password, phone, role);
-    });
-
-    // Register Role Change listener to update phone placeholder
-    document.getElementById('register-role').addEventListener('change', (e) => {
-        const role = e.target.value;
-        const phoneInput = document.getElementById('register-phone');
-        if (role === 'ADMIN') {
-            phoneInput.placeholder = '9876543210';
-        } else if (role === 'STAFF') {
-            phoneInput.placeholder = '9876543211';
-        } else {
-            phoneInput.placeholder = '9876543212';
-        }
+        handleRegister(username, email, password, phone);
     });
 
     // Sidebar navigation clicks
