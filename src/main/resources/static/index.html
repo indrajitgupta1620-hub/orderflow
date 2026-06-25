@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderFlow - Order Management System</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app" class="app-container">
+        
+        <!-- ==================== AUTH SECTION ==================== -->
+        <section id="auth-section" class="auth-section">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fa-solid fa-wind logo-icon"></i>
+                        <span>Order<span class="logo-highlight">Flow</span></span>
+                    </div>
+                    <p id="auth-subtitle">Welcome back! Please login to your account.</p>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email"><i class="fa-regular fa-envelope"></i> Email Address</label>
+                        <input type="email" id="login-email" required placeholder="name@orderflow.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password"><i class="fa-solid fa-lock"></i> Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" id="btn-login-submit" class="btn btn-primary btn-block">
+                        <span>Login</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    </button>
+                </form>
+
+                <!-- Register Form (Hidden by default) -->
+                <form id="register-form" class="auth-form hidden">
+                    <div class="form-group">
+                        <label for="register-username"><i class="fa-regular fa-user"></i> Username</label>
+                        <input type="text" id="register-username" placeholder="johndoe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email"><i class="fa-regular fa-envelope"></i> Email Address</label>
+                        <input type="email" id="register-email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password"><i class="fa-solid fa-lock"></i> Password</label>
+                        <input type="password" id="register-password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-phone"><i class="fa-solid fa-phone"></i> Phone Number</label>
+                        <input type="tel" id="register-phone" placeholder="9876543210" pattern="[0-9]{10}" minlength="10" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-role"><i class="fa-solid fa-user-shield"></i> Security Role</label>
+                        <select id="register-role" required>
+                            <option value="CUSTOMER">Customer (Standard User)</option>
+                            <option value="STAFF">Staff (Inventory & Status Management)</option>
+                            <option value="ADMIN">Admin (Full Control)</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="btn-register-submit" class="btn btn-primary btn-block">
+                        <span>Create Account</span> <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </form>
+
+                <!-- Toggle Navigation Links -->
+                <div class="auth-footer">
+                    <p id="toggle-to-register" class="auth-toggle-text">Don't have an account? <a href="#" id="link-go-register">Register here</a></p>
+                    <p id="toggle-to-login" class="auth-toggle-text hidden">Already have an account? <a href="#" id="link-go-login">Login here</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DASHBOARD SECTION ==================== -->
+        <section id="dashboard-section" class="dashboard-section hidden">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <i class="fa-solid fa-wind brand-icon"></i>
+                    <span>Order<span class="logo-highlight">Flow</span></span>
+                </div>
+                
+                <div class="user-profile-badge">
+                    <div class="user-avatar" id="user-avatar-char">U</div>
+                    <div class="user-info">
+                        <h4 id="user-display-name">Username</h4>
+                        <span id="user-display-role" class="badge">Role</span>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <!-- Admin & Staff Navigation -->
+                    <div id="nav-group-admin" class="nav-group hidden">
+                        <a href="#" id="nav-btn-analytics" class="nav-item active">
+                            <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
+                        </a>
+                        <a href="#" id="nav-btn-inventory" class="nav-item">
+                            <i class="fa-solid fa-boxes-stacked"></i> <span>Inventory</span>
+                        </a>
+                        <a href="#" id="nav-btn-orders" class="nav-item">
+                            <i class="fa-solid fa-receipt"></i> <span>Orders</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Customer Navigation -->
+                    <div id="nav-group-customer" class="nav-group hidden">
+                        <a href="#" id="nav-btn-store" class="nav-item active">
+                            <i class="fa-solid fa-bag-shopping"></i> <span>Storefront</span>
+                        </a>
+                        <a href="#" id="nav-btn-myorders" class="nav-item">
+                            <i class="fa-solid fa-clock-rotate-left"></i> <span>My Orders</span>
+                        </a>
+                    </div>
+
+                    <!-- Shared Navigation -->
+                    <div class="nav-separator"></div>
+                    <a href="#" id="nav-btn-profile" class="nav-item">
+                        <i class="fa-solid fa-user-gear"></i> <span>Profile Settings</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button type="button" id="btn-logout" class="btn btn-logout btn-block">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Log Out</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <header class="top-bar">
+                    <div class="menu-toggle" id="sidebar-toggle">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
+                    <h2 id="view-title">Dashboard</h2>
+                    <div class="top-bar-actions">
+                        <span id="system-time" class="system-time"><i class="fa-regular fa-clock"></i> 00:00:00</span>
+                    </div>
+                </header>
+
+                <div class="content-body">
+                    
+                    <!-- 1. ANALYTICS VIEW (Admin/Staff) -->
+                    <div id="view-analytics" class="dashboard-view">
+                        <!-- Stats Grid -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon rev-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                                <div class="stat-details">
+                                    <h3>Total Revenue</h3>
+                                    <p id="stat-revenue">₹0.00</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon orders-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                                <div class="stat-details">
+                                    <h3>Total Orders</h3>
+                                    <p id="stat-orders">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon items-icon"><i class="fa-solid fa-boxes-packing"></i></div>
+                                <div class="stat-details">
+                                    <h3>Active Products</h3>
+                                    <p id="stat-products">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon users-icon"><i class="fa-solid fa-users"></i></div>
+                                <div class="stat-details">
+                                    <h3>Total Customers</h3>
+                                    <p id="stat-users">0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section -->
+                        <div class="charts-row">
+                            <div class="chart-card flex-2">
+                                <h3>Orders by Status</h3>
+                                <div class="chart-container">
+                                    <canvas id="orders-status-chart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-card flex-3">
+                                <h3>Top Performing Products</h3>
+                                <div class="chart-container">
+                                    <canvas id="top-products-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. INVENTORY VIEW (Admin/Staff) -->
+                    <div id="view-inventory" class="dashboard-view hidden">
+                        <div class="table-actions-row">
+                            <div class="search-box">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="inventory-search" placeholder="Search by product name...">
+                            </div>
+                            <button type="button" id="btn-add-product" class="btn btn-primary">
+                                <i class="fa-solid fa-plus"></i> Add Product
+                            </button>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Stock Level</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 3. ORDERS VIEW (Admin/Staff) -->
+                    <div id="view-orders" class="dashboard-view hidden">
+                        <div class="table-actions-row">
+                            <div class="filters">
+                                <label for="filter-order-status">Status:</label>
+                                <select id="filter-order-status" class="form-control inline-select">
+                                    <option value="">All Statuses</option>
+                                    <option value="PENDING">Pending</option>
+                                    <option value="SHIPPED">Shipped</option>
+                                    <option value="DELIVERED">Delivered</option>
+                                    <option value="CANCELLED">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Customer</th>
+                                        <th>Total Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 4. STOREFRONT VIEW (Customer) -->
+                    <div id="view-store" class="dashboard-view hidden">
+                        <div class="store-header">
+                            <div class="search-box">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="store-search" placeholder="Search products...">
+                            </div>
+                            <button type="button" id="btn-view-cart" class="btn btn-accent btn-cart-icon">
+                                <i class="fa-solid fa-cart-shopping"></i> View Cart <span id="cart-count-badge" class="badge bg-red">0</span>
+                            </button>
+                        </div>
+
+                        <div class="products-grid" id="store-products-grid">
+                            <!-- Dynamic Cards -->
+                        </div>
+                    </div>
+
+                    <!-- 5. MY ORDERS VIEW (Customer) -->
+                    <div id="view-myorders" class="dashboard-view hidden">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Total Amount</th>
+                                        <th>Status</th>
+                                        <th>Details & Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="myorders-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 6. PROFILE SETTINGS VIEW (Shared) -->
+                    <div id="view-profile" class="dashboard-view hidden">
+                        <div class="profile-card">
+                            <h3>Update Profile Information</h3>
+                            <form id="profile-form" class="profile-form">
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="profile-username"><i class="fa-regular fa-user"></i> Username</label>
+                                        <input type="text" id="profile-username" required>
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="profile-email"><i class="fa-regular fa-envelope"></i> Email Address</label>
+                                        <input type="email" id="profile-email" required readonly class="readonly-input">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="profile-phone"><i class="fa-solid fa-phone"></i> Phone Number</label>
+                                        <input type="tel" id="profile-phone" placeholder="9876543210" pattern="[0-9]{10}" minlength="10" maxlength="10">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="profile-role"><i class="fa-solid fa-user-shield"></i> Security Role</label>
+                                        <input type="text" id="profile-role" readonly class="readonly-input">
+                                    </div>
+                                </div>
+                                <button type="submit" id="btn-profile-submit" class="btn btn-primary">
+                                    <i class="fa-regular fa-floppy-disk"></i> Save Profile Details
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </section>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Add/Edit Product Modal -->
+    <div id="modal-product" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-product-title">Add New Product</h3>
+                <span class="close-modal-btn" id="close-modal-product">&times;</span>
+            </div>
+            <form id="product-form">
+                <input type="hidden" id="product-id-hidden">
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" required placeholder="e.g. Wireless Charger">
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Category</label>
+                    <input type="text" id="product-category" required placeholder="e.g. Electronics">
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="product-price">Price (₹)</label>
+                        <input type="number" id="product-price" required min="0.01" step="0.01" placeholder="99.99">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="product-stock">Initial Stock</label>
+                        <input type="number" id="product-stock" required min="0" placeholder="100">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" rows="3" placeholder="Provide product details..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-product">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-product">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Adjust Stock Modal -->
+    <div id="modal-stock" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Adjust Stock Level</h3>
+                <span class="close-modal-btn" id="close-modal-stock">&times;</span>
+            </div>
+            <form id="stock-form">
+                <input type="hidden" id="stock-product-id-hidden">
+                <div class="stock-info-row">
+                    <strong id="stock-product-name">Product Name</strong>
+                    <span>Current Stock: <strong id="stock-current-qty">0</strong></span>
+                </div>
+                <div class="form-group">
+                    <label for="stock-adjust-qty">Stock Adjustment (use negative to decrease)</label>
+                    <input type="number" id="stock-adjust-qty" required placeholder="e.g. 10 or -5">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-stock">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer Cart Modal -->
+    <div id="modal-cart" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Your Shopping Cart</h3>
+                <span class="close-modal-btn" id="close-modal-cart">&times;</span>
+            </div>
+            <div class="cart-body">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-table-body">
+                            <!-- Dynamic items -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cart-totals-section">
+                    <p>Total Items: <strong id="cart-total-qty">0</strong></p>
+                    <p>Estimated Total: <strong class="text-accent" id="cart-total-amt">₹0.00</strong></p>
+                </div>
+                
+                <form id="checkout-form" class="checkout-form border-top">
+                    <h4>Shipping & Delivery Details</h4>
+                    <div class="form-group">
+                        <label for="checkout-address">Shipping Address</label>
+                        <input type="text" id="checkout-address" required placeholder="Enter full delivery address">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-notes">Notes / Special Instructions (Optional)</label>
+                        <textarea id="checkout-notes" rows="2" placeholder="Leave any instructions here"></textarea>
+                    </div>
+                    <div class="modal-footer no-padding-bottom">
+                        <button type="button" class="btn btn-secondary" id="btn-close-cart">Continue Shopping</button>
+                        <button type="submit" class="btn btn-accent" id="btn-checkout-submit">Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Order Details Modal -->
+    <div id="modal-order-details" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Order #<span id="detail-order-id">000</span></h3>
+                <span class="close-modal-btn" id="close-modal-order-details">&times;</span>
+            </div>
+            <div class="order-details-body">
+                <div class="details-metadata-row">
+                    <div>
+                        <p><strong>Placed At:</strong> <span id="detail-order-date">Date</span></p>
+                        <p><strong>Customer Email:</strong> <span id="detail-order-customer">Customer</span></p>
+                        <p><strong>Shipping Address:</strong> <span id="detail-order-address">Address</span></p>
+                    </div>
+                    <div>
+                        <p><strong>Current Status:</strong> <span id="detail-order-status" class="badge">Status</span></p>
+                        <p><strong>Notes:</strong> <span id="detail-order-notes">Notes</span></p>
+                    </div>
+                </div>
+
+                <div class="table-container margin-top">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-items-table-body">
+                            <!-- Dynamic items -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="order-total-display">
+                    <h3>Grand Total: <span class="text-primary" id="detail-order-total">₹0.00</span></h3>
+                </div>
+
+                <div class="modal-footer" id="order-details-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-close-order-details">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

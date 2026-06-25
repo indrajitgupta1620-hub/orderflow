@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:orderflow_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: ${JWT_SECRET:dev_jwt_secret_placeholder_at_least_512_bits_long_dev_key_for_testing_purposes_only_which_is_not_secure}
+  expiration: 3600000
