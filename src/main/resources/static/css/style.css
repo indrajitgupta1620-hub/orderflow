@@ -39,16 +39,8 @@
     font-family: var(--font-body);
 }
 
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
 body {
-    background: linear-gradient(-45deg, var(--bg-main-1), var(--bg-main-2), var(--bg-main-3), var(--bg-main-4));
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    background: linear-gradient(135deg, var(--bg-main-1) 0%, var(--bg-main-2) 45%, var(--bg-main-3) 75%, var(--bg-main-4) 100%);
     color: var(--color-text-main);
     min-height: 100vh;
     overflow-x: hidden;
