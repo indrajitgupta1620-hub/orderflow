@@ -211,7 +211,7 @@ body {
     color: white;
     box-shadow: var(--shadow-soft);
     min-width: 320px;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(6px);
     animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 .toast-success { border-left: 4px solid var(--success-solid); box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
@@ -233,7 +233,7 @@ body {
 }
 .auth-card {
     background: var(--bg-card);
-    backdrop-filter: blur(24px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border-glass);
     border-radius: 20px;
     padding: 48px 40px;
@@ -380,7 +380,7 @@ body {
 .sidebar {
     width: 280px;
     background: rgba(4, 10, 8, 0.65);
-    backdrop-filter: blur(30px);
+    backdrop-filter: blur(8px);
     border-right: 1px solid var(--border-glass);
     display: flex;
     flex-direction: column;
@@ -511,7 +511,7 @@ body {
     justify-content: space-between;
     padding: 20px 40px;
     background: rgba(4, 10, 8, 0.25);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--border-glass);
 }
 .menu-toggle {
@@ -560,7 +560,7 @@ body {
 }
 .stat-card {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     padding: 28px;
@@ -612,7 +612,7 @@ body {
 }
 .chart-card {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     padding: 30px;
@@ -675,7 +675,7 @@ body {
 
 .table-container {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     overflow-x: auto;
@@ -755,7 +755,7 @@ body {
 }
 .product-card {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     padding: 30px;
@@ -850,7 +850,7 @@ body {
 /* ==================== USER PROFILE FORM ==================== */
 .profile-card {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     padding: 40px;
@@ -897,7 +897,7 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(6px);
 }
 .modal.active {
     opacity: 1;
@@ -1067,4 +1067,20 @@ body {
         padding: 24px;
         margin: 20px;
     }
+}
+
+
+/* ==================== HARDWARE ACCELERATION FOR SMOOTH TRANSITIONS ==================== */
+.btn, 
+.sidebar, 
+.top-bar, 
+.stat-card, 
+.product-card, 
+.toast, 
+.modal, 
+.modal-content, 
+.nav-item, 
+.dashboard-view {
+    will-change: transform, opacity;
+    transform: translate3d(0, 0, 0);
 }
