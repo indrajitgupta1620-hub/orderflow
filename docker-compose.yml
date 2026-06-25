@@ -14,9 +14,15 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+      interval: 10s
 
   app:
     build: .
+    image: ghcr.io/indrajitgupta1620-hub/orderflow:latest
     container_name: orderflow-app
     restart: always
     ports:
@@ -28,7 +34,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-3600000}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   mysql-data:
