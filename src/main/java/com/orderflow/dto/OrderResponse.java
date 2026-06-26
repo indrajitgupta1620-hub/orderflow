@@ -1,5 +1,6 @@
 package com.orderflow.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +13,11 @@ public class OrderResponse {
     private BigDecimal totalAmount;
     private String shippingAddress;
     private String notes;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime placedAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updatedAt;
     private List<OrderItemResponse> orderItems;
     private Long invoiceId;
