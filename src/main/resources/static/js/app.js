@@ -507,6 +507,16 @@ async function handleStockAdjust(e) {
     }
 }
 
+function getCategoryIcon(category) {
+    if (!category) return 'fa-box';
+    const cat = category.toLowerCase();
+    if (cat.includes('electr')) return 'fa-laptop';
+    if (cat.includes('foot')) return 'fa-shoe-prints';
+    if (cat.includes('kitchen') || cat.includes('home')) return 'fa-mug-hot';
+    if (cat.includes('furnit') || cat.includes('office') || cat.includes('chair')) return 'fa-chair';
+    return 'fa-box';
+}
+
 // ==================== STOREFRONT & CART SERVICES (Customer) ====================
 async function loadStorefrontData(query = '') {
     const grid = document.getElementById('store-products-grid');
@@ -547,6 +557,9 @@ async function loadStorefrontData(query = '') {
             }
             
             card.innerHTML = `
+                <div class="product-image-container">
+                    <i class="fa-solid ${getCategoryIcon(p.category)} category-large-icon"></i>
+                </div>
                 <div class="product-card-top">
                     <div class="product-meta">
                         <span class="product-category">${p.category}</span>
@@ -558,18 +571,22 @@ async function loadStorefrontData(query = '') {
                     <p>${p.description || 'No description provided.'}</p>
                 </div>
                 <div class="product-card-bottom">
-                    <span class="product-price">₹${p.price.toFixed(2)}</span>
+                    <div class="product-price-row">
+                        <span class="product-price">₹${p.price.toFixed(2)}</span>
+                        ${p.stockQty > 0 ? `
+                            <div class="qty-adjuster">
+                                <button class="btn-qty" onclick="adjustStorefrontQty(this, -1)">-</button>
+                                <span class="qty-val" id="qty-val-${p.id}">${initialQty}</span>
+                                <button class="btn-qty" onclick="adjustStorefrontQty(this, 1, ${p.stockQty})">+</button>
+                            </div>
+                        ` : ''}
+                    </div>
                     ${p.stockQty > 0 ? `
-                        <div class="qty-adjuster">
-                            <button class="btn-qty" onclick="adjustStorefrontQty(this, -1)">-</button>
-                            <span class="qty-val" id="qty-val-${p.id}">${initialQty}</span>
-                            <button class="btn-qty" onclick="adjustStorefrontQty(this, 1, ${p.stockQty})">+</button>
-                        </div>
-                        <button class="btn btn-primary" onclick="addToCart(${p.id}, '${p.name.replace(/'/g, "\\'")}', ${p.price})">
-                            <i class="fa-solid fa-cart-plus"></i> Add
+                        <button class="btn btn-primary btn-add-to-cart" onclick="addToCart(${p.id}, '${p.name.replace(/'/g, "\\'")}', ${p.price})">
+                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
                         </button>
                     ` : `
-                        <button class="btn btn-secondary" disabled>Unavailable</button>
+                        <button class="btn btn-secondary btn-add-to-cart" disabled>Unavailable</button>
                     `}
                 </div>
             `;

@@ -109,7 +109,47 @@ public class DatabaseSeeder implements CommandLineRunner {
             p5.setCategory("Home & Kitchen");
             productRepository.save(p5);
 
-            System.out.println("Seeded database with 5 sample products.");
+            Product p6 = new Product();
+            p6.setName("Noise Cancelling Headphones");
+            p6.setDescription("Over-ear active noise cancelling headphones with 30-hour battery life");
+            p6.setPrice(BigDecimal.valueOf(12499.00));
+            p6.setStockQty(40);
+            p6.setCategory("Electronics");
+            productRepository.save(p6);
+
+            Product p7 = new Product();
+            p7.setName("Smart Watch");
+            p7.setDescription("Fitness tracker smart watch with heart rate monitor and AMOLED display");
+            p7.setPrice(BigDecimal.valueOf(5999.00));
+            p7.setStockQty(75);
+            p7.setCategory("Electronics");
+            productRepository.save(p7);
+
+            Product p8 = new Product();
+            p8.setName("Gaming Monitor");
+            p8.setDescription("27-inch 144Hz 1ms IPS gaming monitor with HDR support");
+            p8.setPrice(BigDecimal.valueOf(24999.00));
+            p8.setStockQty(25);
+            p8.setCategory("Electronics");
+            productRepository.save(p8);
+
+            Product p9 = new Product();
+            p9.setName("Ergonomic Desk Chair");
+            p9.setDescription("High-back ergonomic mesh office chair with adjustable lumbar support");
+            p9.setPrice(BigDecimal.valueOf(14500.00));
+            p9.setStockQty(15);
+            p9.setCategory("Furniture");
+            productRepository.save(p9);
+
+            Product p10 = new Product();
+            p10.setName("Stainless Steel Bottle");
+            p10.setDescription("Vacuum insulated double-walled water bottle, keeps cold for 24 hours");
+            p10.setPrice(BigDecimal.valueOf(999.00));
+            p10.setStockQty(120);
+            p10.setCategory("Home & Kitchen");
+            productRepository.save(p10);
+
+            System.out.println("Seeded database with 10 sample products.");
         }
     }
 }
