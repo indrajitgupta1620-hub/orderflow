@@ -41,12 +41,22 @@ public class AuthService {
             throw new IllegalArgumentException("Phone number is already registered");
         }
 
-        User.Role targetRole = User.Role.CUSTOMER;
+        User.Role targetRole = null;
         if (request.getRole() != null && !request.getRole().trim().isEmpty()) {
             try {
                 targetRole = User.Role.valueOf(request.getRole().trim().toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Invalid role: " + request.getRole());
+            }
+        }
+
+        if (targetRole == null) {
+            if (request.getEmail().contains("@admin")) {
+                targetRole = User.Role.ADMIN;
+            } else if (request.getEmail().contains("@staff")) {
+                targetRole = User.Role.STAFF;
+            } else {
+                targetRole = User.Role.CUSTOMER;
             }
         }
 
