@@ -41,11 +41,27 @@ public class AuthService {
             throw new IllegalArgumentException("Phone number is already registered");
         }
 
+        User.Role targetRole = User.Role.CUSTOMER;
+        if (request.getRole() != null && !request.getRole().trim().isEmpty()) {
+            try {
+                targetRole = User.Role.valueOf(request.getRole().trim().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid role: " + request.getRole());
+            }
+        }
+
+        if (targetRole == User.Role.STAFF && !request.getEmail().contains("@staff")) {
+            throw new IllegalArgumentException("Staff registration email must contain '@staff'");
+        }
+        if (targetRole == User.Role.ADMIN && !request.getEmail().contains("@admin")) {
+            throw new IllegalArgumentException("Admin registration email must contain '@admin'");
+        }
+
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setRole(User.Role.CUSTOMER);
+        user.setRole(targetRole);
         user.setPhone(request.getPhone());
         userRepository.save(user);
 
@@ -60,6 +76,13 @@ public class AuthService {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (user.getRole() == User.Role.STAFF && !request.getEmail().contains("@staff")) {
+            throw new IllegalArgumentException("Staff login email must contain '@staff'");
+        }
+        if (user.getRole() == User.Role.ADMIN && !request.getEmail().contains("@admin")) {
+            throw new IllegalArgumentException("Admin login email must contain '@admin'");
+        }
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
         return new AuthResponse(token, user.getRole().name(), user.getUsername(), user.getId());

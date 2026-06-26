@@ -36,7 +36,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             // Admin User
             User admin = new User();
             admin.setUsername("admin");
-            admin.setEmail("admin@orderflow.com");
+            admin.setEmail("admin@admin.orderflow.com");
             admin.setPasswordHash(passwordEncoder.encode("AdminPassword@123"));
             admin.setRole(User.Role.ADMIN);
             admin.setPhone("+919876543210");
@@ -45,7 +45,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             // Staff User
             User staff = new User();
             staff.setUsername("staff");
-            staff.setEmail("staff@orderflow.com");
+            staff.setEmail("staff@staff.orderflow.com");
             staff.setPasswordHash(passwordEncoder.encode("StaffPassword@123"));
             staff.setRole(User.Role.STAFF);
             staff.setPhone("+919876543211");
@@ -61,8 +61,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             userRepository.save(customer);
 
             System.out.println("Seeded database with default users:");
-            System.out.println("  Admin: admin@orderflow.com / AdminPassword@123");
-            System.out.println("  Staff: staff@orderflow.com / StaffPassword@123");
+            System.out.println("  Admin: admin@admin.orderflow.com / AdminPassword@123");
+            System.out.println("  Staff: staff@staff.orderflow.com / StaffPassword@123");
             System.out.println("  Customer: customer@orderflow.com / CustomerPassword@123");
         }
     }

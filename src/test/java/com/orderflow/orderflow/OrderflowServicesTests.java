@@ -134,4 +134,112 @@ class OrderflowServicesTests {
         Product restoredProduct = productRepository.findById(product.getId()).orElseThrow();
         assertEquals(5, restoredProduct.getStockQty());
     }
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @Test
+    void testStaffRegistrationAndLoginWithCorrectEmail() {
+        RegisterRequest register = new RegisterRequest();
+        register.setUsername("teststaff");
+        register.setEmail("test@staff.orderflow.com");
+        register.setPassword("password123");
+        register.setRole("STAFF");
+
+        AuthResponse regResponse = authService.register(register);
+        assertNotNull(regResponse.getToken());
+        assertEquals("STAFF", regResponse.getRole());
+
+        com.orderflow.dto.LoginRequest login = new com.orderflow.dto.LoginRequest();
+        login.setEmail("test@staff.orderflow.com");
+        login.setPassword("password123");
+        AuthResponse loginResponse = authService.login(login);
+        assertNotNull(loginResponse.getToken());
+        assertEquals("STAFF", loginResponse.getRole());
+    }
+
+    @Test
+    void testStaffRegistrationWithIncorrectEmailThrowsException() {
+        RegisterRequest register = new RegisterRequest();
+        register.setUsername("badstaff");
+        register.setEmail("badstaff@orderflow.com");
+        register.setPassword("password123");
+        register.setRole("STAFF");
+
+        assertThrows(IllegalArgumentException.class, () -> authService.register(register));
+    }
+
+    @Test
+    void testStaffLoginWithIncorrectEmailThrowsException() {
+        User user = new User();
+        user.setUsername("hackedstaff");
+        user.setEmail("hacker@orderflow.com");
+        user.setPasswordHash(passwordEncoder.encode("password123"));
+        user.setRole(User.Role.STAFF);
+        userRepository.save(user);
+
+        com.orderflow.dto.LoginRequest login = new com.orderflow.dto.LoginRequest();
+        login.setEmail("hacker@orderflow.com");
+        login.setPassword("password123");
+        assertThrows(IllegalArgumentException.class, () -> authService.login(login));
+    }
+
+    @Test
+    void testAdminRegistrationAndLoginWithCorrectEmail() {
+        RegisterRequest register = new RegisterRequest();
+        register.setUsername("testadmin");
+        register.setEmail("test@admin.orderflow.com");
+        register.setPassword("password123");
+        register.setRole("ADMIN");
+
+        AuthResponse regResponse = authService.register(register);
+        assertNotNull(regResponse.getToken());
+        assertEquals("ADMIN", regResponse.getRole());
+
+        com.orderflow.dto.LoginRequest login = new com.orderflow.dto.LoginRequest();
+        login.setEmail("test@admin.orderflow.com");
+        login.setPassword("password123");
+        AuthResponse loginResponse = authService.login(login);
+        assertNotNull(loginResponse.getToken());
+        assertEquals("ADMIN", loginResponse.getRole());
+    }
+
+    @Test
+    void testAdminRegistrationWithIncorrectEmailThrowsException() {
+        RegisterRequest register = new RegisterRequest();
+        register.setUsername("badadmin");
+        register.setEmail("badadmin@orderflow.com");
+        register.setPassword("password123");
+        register.setRole("ADMIN");
+
+        assertThrows(IllegalArgumentException.class, () -> authService.register(register));
+    }
+
+    @Test
+    void testAdminLoginWithIncorrectEmailThrowsException() {
+        User user = new User();
+        user.setUsername("hackedadmin");
+        user.setEmail("hackeradmin@orderflow.com");
+        user.setPasswordHash(passwordEncoder.encode("password123"));
+        user.setRole(User.Role.ADMIN);
+        userRepository.save(user);
+
+        com.orderflow.dto.LoginRequest login = new com.orderflow.dto.LoginRequest();
+        login.setEmail("hackeradmin@orderflow.com");
+        login.setPassword("password123");
+        assertThrows(IllegalArgumentException.class, () -> authService.login(login));
+    }
+
+    @Test
+    void testCustomerRegistrationWithAnyEmail() {
+        RegisterRequest register = new RegisterRequest();
+        register.setUsername("anycustomer");
+        register.setEmail("customer@anydomain.com");
+        register.setPassword("password123");
+        register.setRole("CUSTOMER");
+
+        AuthResponse regResponse = authService.register(register);
+        assertNotNull(regResponse.getToken());
+        assertEquals("CUSTOMER", regResponse.getRole());
+    }
 }
